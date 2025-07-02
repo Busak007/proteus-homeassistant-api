@@ -1,0 +1,344 @@
+[
+    {
+        "id": "b1f5c9d0c5c1a6a4",
+        "type": "inject",
+        "z": "f790aed9b99d17d7",
+        "name": "Vypnout flexi",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 210,
+        "y": 820,
+        "wires": [
+            [
+                "2b9346746c452f92"
+            ]
+        ]
+    },
+    {
+        "id": "2b9346746c452f92",
+        "type": "exec",
+        "z": "f790aed9b99d17d7",
+        "command": "node \"C:\\Users\\user\\Documents\\scripts\\vypnout-flexi.js\"",
+        "addpay": false,
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "name": "Spusť skript",
+        "x": 430,
+        "y": 820,
+        "wires": [
+            [],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "b78c5de311578c2a",
+        "type": "inject",
+        "z": "f790aed9b99d17d7",
+        "name": "Zapnout flexi",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 210,
+        "y": 880,
+        "wires": [
+            [
+                "139902a422d343a7"
+            ]
+        ]
+    },
+    {
+        "id": "139902a422d343a7",
+        "type": "exec",
+        "z": "f790aed9b99d17d7",
+        "command": "node \"C:\\Users\\user\\Documents\\scripts\\zapnout-flexi.js\"",
+        "addpay": false,
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "name": "Spusť skript",
+        "x": 430,
+        "y": 880,
+        "wires": [
+            [],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "6cf255c63280843f",
+        "type": "inject",
+        "z": "f790aed9b99d17d7",
+        "name": "Vypnout altoritmus",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 230,
+        "y": 940,
+        "wires": [
+            [
+                "4bcf8c5bd20900dc"
+            ]
+        ]
+    },
+    {
+        "id": "4bcf8c5bd20900dc",
+        "type": "exec",
+        "z": "f790aed9b99d17d7",
+        "command": "node \"C:\\Users\\user\\Documents\\scripts\\vypnout-algoritmus.js\"",
+        "addpay": false,
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "name": "Spusť skript",
+        "x": 430,
+        "y": 940,
+        "wires": [
+            [],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "2795f6d9f8dad63a",
+        "type": "inject",
+        "z": "f790aed9b99d17d7",
+        "name": "Zapnout altoritmus",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 230,
+        "y": 1000,
+        "wires": [
+            [
+                "ddbd3ce25d273470"
+            ]
+        ]
+    },
+    {
+        "id": "ddbd3ce25d273470",
+        "type": "exec",
+        "z": "f790aed9b99d17d7",
+        "command": "node \"C:\\Users\\user\\Documents\\scripts\\zapnout-algoritmus.js\"",
+        "addpay": false,
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "name": "Spusť skript",
+        "x": 430,
+        "y": 1000,
+        "wires": [
+            [],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "d5788b82ab9c842d",
+        "type": "inject",
+        "z": "f790aed9b99d17d7",
+        "name": "Přepnout",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 200,
+        "y": 1060,
+        "wires": [
+            [
+                "1af07b1d62fa7fca"
+            ]
+        ]
+    },
+    {
+        "id": "1af07b1d62fa7fca",
+        "type": "exec",
+        "z": "f790aed9b99d17d7",
+        "command": "node \"C:\\Users\\user\\Documents\\scripts\\prepnout-prodej-z-baterie-do-site.js\"",
+        "addpay": false,
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "name": "Prodej z baterie do sítě",
+        "x": 470,
+        "y": 1060,
+        "wires": [
+            [],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "f693e06860426990",
+        "type": "inject",
+        "z": "f790aed9b99d17d7",
+        "name": "Přepnout",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 200,
+        "y": 1120,
+        "wires": [
+            [
+                "efd90c970ce4c1d2"
+            ]
+        ]
+    },
+    {
+        "id": "efd90c970ce4c1d2",
+        "type": "exec",
+        "z": "f790aed9b99d17d7",
+        "command": "node \"C:\\Users\\user\\Documents\\scripts\\prepnout-prodej-do-site-misto-nabijeni.js\"",
+        "addpay": false,
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "name": "Prodej do sítě místo nabíjení",
+        "x": 480,
+        "y": 1120,
+        "wires": [
+            [],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "5824c8779f750bde",
+        "type": "inject",
+        "z": "f790aed9b99d17d7",
+        "name": "Přepnout",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 200,
+        "y": 1240,
+        "wires": [
+            [
+                "152ae27c773a2dc1"
+            ]
+        ]
+    },
+    {
+        "id": "152ae27c773a2dc1",
+        "type": "exec",
+        "z": "f790aed9b99d17d7",
+        "command": "node \"C:\\Users\\user\\Documents\\scripts\\prepnout-nabijeni-baterie-ze-site.js\"",
+        "addpay": false,
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "name": "Nabíjení baterie ze sítě",
+        "x": 470,
+        "y": 1240,
+        "wires": [
+            [],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "a3ad927750a09b3d",
+        "type": "inject",
+        "z": "f790aed9b99d17d7",
+        "name": "Přepnout",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 200,
+        "y": 1180,
+        "wires": [
+            [
+                "1309146681a4c2a9"
+            ]
+        ]
+    },
+    {
+        "id": "1309146681a4c2a9",
+        "type": "exec",
+        "z": "f790aed9b99d17d7",
+        "command": "node \"C:\\Users\\user\\Documents\\scripts\\prepnout-setreni-energie-v-baterii.js\"",
+        "addpay": false,
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "name": "Šetření energie v baterii",
+        "x": 470,
+        "y": 1180,
+        "wires": [
+            [],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "8a63c47eb977b021",
+        "type": "inject",
+        "z": "f790aed9b99d17d7",
+        "name": "Přepnout",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 200,
+        "y": 1300,
+        "wires": [
+            [
+                "35ba8b1dec01880e"
+            ]
+        ]
+    },
+    {
+        "id": "35ba8b1dec01880e",
+        "type": "exec",
+        "z": "f790aed9b99d17d7",
+        "command": "node \"C:\\Users\\user\\Documents\\scripts\\prepnout-zakaz-pretoku.js\"",
+        "addpay": false,
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "name": "Zákaz přetoků",
+        "x": 440,
+        "y": 1300,
+        "wires": [
+            [],
+            [],
+            []
+        ]
+    }
+]
