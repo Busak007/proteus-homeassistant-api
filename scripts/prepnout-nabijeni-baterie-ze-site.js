@@ -6,7 +6,7 @@ const puppeteer = require('puppeteer');
 
   await page.setCookie({
     name: 'proteus_session',
-    value: '6wgcpn3v63wo7nnbi42z6lnm7hqr7ujvh6e62uo5',
+    value: 'TVUJ_KLIC',
     domain: 'proteus.deltagreen.cz',
     path: '/',
     httpOnly: true,
