@@ -1,0 +1,38 @@
+const puppeteer = require('puppeteer');
+
+(async () => {
+  const browser = await puppeteer.launch({ headless: false });
+  const page = await browser.newPage();
+
+  await page.setCookie({
+    name: 'proteus_session',
+    value: '6wgcpn3v63wo7nnbi42z6lnm7hqr7ujvh6e62uo5',
+    domain: 'proteus.deltagreen.cz',
+    path: '/',
+    httpOnly: true,
+    secure: true,
+  });
+
+  await page.goto('https://proteus.deltagreen.cz/cs/device/inverter/clwhov40a000h68eaxope0qk3', {
+    waitUntil: 'networkidle2'
+  });
+
+  const selector = 'body > main > div > div.w-full.overflow-x-auto > div > div.relative.min-h-96 > div > div:nth-child(1) > div.rounded-lg.bg-background.text-paragraph.dark\\:border-border-dark.dark\\:bg-neutral-black.dark\\:text-paragraph-dark.px-0.py-5.shadow-md.sm\\:py-7.border.border-secondary > div.flex.items-center.justify-between.px-4.sm\\:px-7 > button';
+
+  await page.waitForSelector(selector, { visible: true, timeout: 10000 });
+
+  await page.evaluate((sel) => {
+    const btn = document.querySelector(sel);
+    if (btn) {
+      btn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      btn.click();
+      console.log('Kliknutí na tlačítko provedeno.');
+    } else {
+      console.log('Tlačítko nenalezeno.');
+    }
+  }, selector);
+
+  await new Promise(resolve => setTimeout(resolve, 2000));
+
+  await browser.close();
+})();
