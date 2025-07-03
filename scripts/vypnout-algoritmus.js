@@ -1,19 +1,28 @@
 const puppeteer = require('puppeteer');
 
 (async () => {
+  const sessionKey = process.argv[2];
+
+  if (!sessionKey) {
+    console.error("? Chybí session key jako argument.");
+    process.exit(1);
+  }
+
+  console.log("?? Používám session key:", sessionKey);
+
   const browser = await puppeteer.launch({ headless: false });
   const page = await browser.newPage();
 
   await page.setCookie({
     name: 'proteus_session',
-    value: 'TVUJ_KLIC',
+    value: sessionKey,
     domain: 'proteus.deltagreen.cz',
     path: '/',
     httpOnly: true,
     secure: true,
   });
 
-  await page.goto('https://proteus.deltagreen.cz/cs/device/inverter/TVOJE_INVERTER_ID', {
+  await page.goto('https://proteus.deltagreen.cz/cs/device/inverter/clwhov40a000h68eaxope0qk3', {
     waitUntil: 'networkidle2'
   });
 
@@ -26,13 +35,12 @@ const puppeteer = require('puppeteer');
     if (btn) {
       btn.scrollIntoView({ behavior: 'smooth', block: 'center' });
       btn.click();
-      console.log('Kliknutí na tlačítko provedeno.');
+      console.log('?? Kliknutí na tlačítko provedeno.');
     } else {
-      console.log('Tlačítko nenalezeno.');
+      console.log('? Tlačítko nenalezeno.');
     }
   }, selector);
 
   await new Promise(resolve => setTimeout(resolve, 2000));
-
   await browser.close();
 })();
