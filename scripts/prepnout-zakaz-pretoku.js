@@ -1,19 +1,25 @@
 const puppeteer = require('puppeteer');
 
 (async () => {
+  const sessionKey = process.argv[2];
+  if (!sessionKey) {
+    console.error('? Chybí session token jako argument! Spusť např.: node script.js tvuj_session_token');
+    process.exit(1);
+  }
+
   const browser = await puppeteer.launch({ headless: false });
   const page = await browser.newPage();
 
   await page.setCookie({
     name: 'proteus_session',
-    value: 'TVUJ_KLIC',
+    value: sessionKey,
     domain: 'proteus.deltagreen.cz',
     path: '/',
     httpOnly: true,
     secure: true,
   });
 
-  await page.goto('https://proteus.deltagreen.cz/cs/device/inverter/TVOJE_INVERTER_ID', {
+  await page.goto('https://proteus.deltagreen.cz/cs/device/inverter/clwhov40a000h68eaxope0qk3', {
     waitUntil: 'networkidle2'
   });
 
