@@ -13,7 +13,7 @@ const puppeteer = require('puppeteer');
     secure: true,
   });
 
-  await page.goto('https://proteus.deltagreen.cz/cs/device/inverter/clwhov40a000h68eaxope0qk3', {
+  await page.goto('https://proteus.deltagreen.cz/cs/device/inverter/TVOJE_INVERTER_ID', {
     waitUntil: 'networkidle2'
   });
 
