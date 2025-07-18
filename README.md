@@ -1,14 +1,12 @@
 # proteus-homeassistant-api
 
-je třeba si doinstalovat Puppeteer
-```
-### npm install puppeteer
-```
+Do NodeRed importujte JSON 
+pravé tlačítko -> insert -> import -> (vložte obsah souboru) -> import -> vložte do listu -> deploy
 
-v node-red si upravte cestu ke scriptům
+je třeba mít nainstalovaný addon HACS - Node-RED Companion Integration - https://github.com/zachowj/hass-node-red
 
-v node-red si vyplňte svuj email a heslo k němu
+v HomeAssistant otevřete nastavení -> integrace -> NodeRed -> Proteus a vyplňte email, heslo a inverteID
+Do 30s by se mělo API připojit a stáhnout data
 
-v node-red si upravte v http request (Stáhnout) vaše inverterId a householdId
+To je vše :-)
 
-ve scriptech si upravte na cca řádcích 20-40 vaše inverterId v URL
