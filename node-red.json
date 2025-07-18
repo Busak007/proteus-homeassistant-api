@@ -1,344 +1,2815 @@
 [
     {
-        "id": "b1f5c9d0c5c1a6a4",
+        "id": "46b943ed0cba89d0",
         "type": "inject",
-        "z": "f790aed9b99d17d7",
-        "name": "Vypnout flexi",
+        "z": "3a1fe710368e588a",
+        "name": "start",
         "props": [],
+        "repeat": "30",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "0.3",
+        "topic": "",
+        "x": 130,
+        "y": 60,
+        "wires": [
+            [
+                "4a8a0d4013854e26"
+            ]
+        ]
+    },
+    {
+        "id": "91e3b94b2fcc9f66",
+        "type": "http request",
+        "z": "3a1fe710368e588a",
+        "name": "Login",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "https://proteus.deltagreen.cz/api/trpc/users.loginWithEmailAndPassword",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [
+            {
+                "keyType": "other",
+                "keyValue": "Origin",
+                "valueType": "other",
+                "valueValue": "https://proteus.deltagreen.cz"
+            },
+            {
+                "keyType": "other",
+                "keyValue": "Referer",
+                "valueType": "other",
+                "valueValue": "https://proteus.deltagreen.cz/cs/auth/login/email-and-password"
+            },
+            {
+                "keyType": "User-Agent",
+                "keyValue": "",
+                "valueType": "other",
+                "valueValue": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+            },
+            {
+                "keyType": "Content-Type",
+                "keyValue": "",
+                "valueType": "other",
+                "valueValue": "application/json"
+            }
+        ],
+        "x": 730,
+        "y": 60,
+        "wires": [
+            [
+                "cbd6be95f7cc603d"
+            ]
+        ]
+    },
+    {
+        "id": "cbd6be95f7cc603d",
+        "type": "function",
+        "z": "3a1fe710368e588a",
+        "name": "Save cookies + připrav hlavičky",
+        "func": "let status = msg.statusCode;\nlet cookies = msg.headers['set-cookie'] || [];\n\nlet proteus_session = null;\nlet proteus_csrf = null;\n\nif (cookies.length) {\n  cookies.forEach(cookie => {\n    if (cookie.includes('proteus_session=')) {\n      proteus_session = cookie.split('proteus_session=')[1].split(';')[0];\n    }\n    if (cookie.includes('proteus_csrf=')) {\n      proteus_csrf = cookie.split('proteus_csrf=')[1].split(';')[0];\n    }\n  });\n}\n\nlet session = proteus_session;\nlet csrf = proteus_csrf;\n\n\nconst input = {\n  householdId: \"clwhorwkp000968eabhkb5nu0\"\n};\n\nmsg.login_status = (status === 200) ? 'OK' : 'Chyba';\nmsg.proteus_session = proteus_session || '';\nmsg.proteus_csrf = proteus_csrf || '';\nmsg.proteus_session = proteus_session;\nmsg.proteus_csrf = proteus_csrf;\n\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 930,
+        "y": 60,
+        "wires": [
+            [
+                "10b537735987276d",
+                "bc8039faed1449b9"
+            ]
+        ]
+    },
+    {
+        "id": "f70cb7acc8e6e806",
+        "type": "function",
+        "z": "3a1fe710368e588a",
+        "name": "Login",
+        "func": "msg.payload = {\n  json: {\n    tenantId: \"TID_DELTA_GREEN\",\n    email: msg.email || \"tvuj.email@domena.cz\",\n    password: msg.password || \"tvojeheslo\"\n  }\n};\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 610,
+        "y": 60,
+        "wires": [
+            [
+                "91e3b94b2fcc9f66"
+            ]
+        ]
+    },
+    {
+        "id": "4a8a0d4013854e26",
+        "type": "api-current-state",
+        "z": "3a1fe710368e588a",
+        "name": "email",
+        "server": "df8e5a1.6b96ca8",
+        "version": 3,
+        "outputs": 1,
+        "halt_if": "",
+        "halt_if_type": "str",
+        "halt_if_compare": "is",
+        "entity_id": "text.e_mail",
+        "state_type": "str",
+        "blockInputOverrides": true,
+        "outputProperties": [
+            {
+                "property": "email",
+                "propertyType": "msg",
+                "value": "",
+                "valueType": "entityState"
+            }
+        ],
+        "for": "0",
+        "forType": "num",
+        "forUnits": "minutes",
+        "override_topic": false,
+        "state_location": "payload",
+        "override_payload": "msg",
+        "entity_location": "data",
+        "override_data": "msg",
+        "x": 350,
+        "y": 60,
+        "wires": [
+            [
+                "e3be7031dfe64751"
+            ]
+        ]
+    },
+    {
+        "id": "e3be7031dfe64751",
+        "type": "api-current-state",
+        "z": "3a1fe710368e588a",
+        "name": "pswd",
+        "server": "df8e5a1.6b96ca8",
+        "version": 3,
+        "outputs": 1,
+        "halt_if": "",
+        "halt_if_type": "str",
+        "halt_if_compare": "is",
+        "entity_id": "text.heslo",
+        "state_type": "str",
+        "blockInputOverrides": true,
+        "outputProperties": [
+            {
+                "property": "password",
+                "propertyType": "msg",
+                "value": "",
+                "valueType": "entityState"
+            }
+        ],
+        "for": "0",
+        "forType": "num",
+        "forUnits": "minutes",
+        "override_topic": false,
+        "state_location": "payload",
+        "override_payload": "msg",
+        "entity_location": "data",
+        "override_data": "msg",
+        "x": 370,
+        "y": 60,
+        "wires": [
+            [
+                "a693b0caf463b468"
+            ]
+        ]
+    },
+    {
+        "id": "40c3c3a91e991d57",
+        "type": "http request",
+        "z": "3a1fe710368e588a",
+        "name": "Data",
+        "method": "use",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 550,
+        "y": 200,
+        "wires": [
+            [
+                "75ca9cde66eb6f4a"
+            ]
+        ]
+    },
+    {
+        "id": "8cb2621b6ca031ce",
+        "type": "debug",
+        "z": "3a1fe710368e588a",
+        "name": "Proteus",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "proteus",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 980,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "10b537735987276d",
+        "type": "function",
+        "z": "3a1fe710368e588a",
+        "name": "Save cookies + připrav hlavičky",
+        "func": "// V Node-RED HTTP Request node nastav:\n\n// URL:\n// https://proteus.deltagreen.cz/api/trpc/linkBoxes.connectionState,inverters.detail,controlPlans.active?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22householdId%22%3A%22clwhorwkp000968eabhkb5nu0%22%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22inverterId%22%3A%22clwhov40a000h68eaxope0qk3%22%7D%7D%2C%222%22%3A%7B%22json%22%3A%7B%22inverterId%22%3A%22clwhov40a000h68eaxope0qk3%22%7D%7D%7D\n\n//?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22householdId%22%3A%22clwhorwkp000968eabhkb5nu0%22%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22inverterId%22%3A%22clwhov40a000h68eaxope0qk3%22%7D%7D%2C%222%22%3A%7B%22json%22%3A%7B%22inverterId%22%3A%22clwhov40a000h68eaxope0qk3%22%7D%7D%2C%223%22%3A%7B%22json%22%3A%7B%22inverterId%22%3A%22clwhov40a000h68eaxope0qk3%22%7D%7D%2C%224%22%3A%7B%22json%22%3A%7B%22inverterId%22%3A%22clwhov40a000h68eaxope0qk3%22%7D%7D%2C%225%22%3A%7B%22json%22%3A%7B%7D%7D%2C%226%22%3A%7B%22json%22%3A%7B%22inverterId%22%3A%22clwhov40a000h68eaxope0qk3%22%7D%7D%2C%227%22%3A%7B%22json%22%3A%7B%22inverterId%22%3A%22clwhov40a000h68eaxope0qk3%22%7D%7D%2C%228%22%3A%7B%22json%22%3A%7B%22inverterId%22%3A%22clwhov40a000h68eaxope0qk3%22%7D%7D%7D\n\n//https://proteus.deltagreen.cz/api/trpc/linkBoxes.connectionState,inverters.detail,commands.current,inverters.currentStep,prices.currentDistributionPrices,users.wsToken,inverters.extendedDetail,inverters.lastState,inverters.flexibilityRewardsSummary\n//https://proteus.deltagreen.cz/api/trpc/inverters.detail,inverters.flexibilityRewardsSummary,inverters.controls.state,commands.current,inverters.currentStep\n\nlet id = msg.inverter_id || \"clwhov40a000h68eaxope0qk3\";\n\nlet inputObj = {\n  \"0\": { json: { inverterId: id }},\n  \"1\": { json: { inverterId: id }},\n  \"2\": { json: { inverterId: id }},\n  \"3\": { json: { inverterId: id }},\n  \"4\": { json: { inverterId: id }}\n};\n\nlet methods = [\n  \"inverters.detail\",\n  \"inverters.flexibilityRewardsSummary\",\n  \"inverters.controls.state\",\n  \"commands.current\",\n  \"inverters.currentStep\"\n];\n\n\n//  \"inverters.detail\",\n//  \"inverters.currentStep\",\n//  \"commands.current\"\n\nlet encodedInput = encodeURIComponent(JSON.stringify(inputObj));\n\nmsg.url = `https://proteus.deltagreen.cz/api/trpc/${methods.join(\",\")}?batch=1&input=${encodedInput}`;\n\nmsg.method = \"GET\";\nmsg.headers = {\n    'Cookie': `proteus_session=${msg.proteus_session}; proteus_csrf=${msg.proteus_csrf}`,\n    'x-trpc-source': 'nextjs-react',\n    'x-proteus-csrf': msg.proteus_csrf,\n    'content-type': 'application/json',\n    'accept': '*/*',\n    'accept-language': 'en-US,en;q=0.9',\n    'cache-control': 'no-cache',\n    'pragma': 'no-cache',\n    'sec-ch-ua': '\"Not_A Brand\";v=\"8\", \"Chromium\";v=\"120\"',\n    'sec-ch-ua-mobile': '?0',\n    'sec-ch-ua-platform': '\"Windows\"',\n    'sec-fetch-dest': 'empty',\n    'sec-fetch-mode': 'cors',\n    'sec-fetch-site': 'same-origin',\n    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',\n    'Referer': 'https://proteus.deltagreen.cz/cs/device/inverter/clwhov40a000h68eaxope0qk3/plan'\n};\n\nreturn msg;\n\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 350,
+        "y": 200,
+        "wires": [
+            [
+                "40c3c3a91e991d57"
+            ]
+        ]
+    },
+    {
+        "id": "75ca9cde66eb6f4a",
+        "type": "function",
+        "z": "3a1fe710368e588a",
+        "name": "Zpracování JSON odpovědi",
+        "func": "\n\n// ZPRACOVÁNÍ JSONL ODPOVĚDI - OPTIMALIZOVANÁ VERZE\n// Nahraď Parse JSON node tímto function node:\n\n// Rozdělí JSONL na jednotlivé řádky a parsuje je\nconst lines = msg.payload.split('\\n').filter(line => line.trim());\nconst results = [];\n\nfor (const line of lines) {\n    try {\n        const parsed = JSON.parse(line);\n        results.push(parsed);\n    } catch (error) {\n        node.warn(`Chyba při parsování řádku: ${line}`);\n    }\n}\n    \n\n// Konečný výsledek\nmsg.payload = {\n    raw: results, // Pro debug\n    timestamp: new Date().toISOString()\n};\n\n\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 740,
+        "y": 200,
+        "wires": [
+            [
+                "c980c48b6913d194",
+                "8cb2621b6ca031ce"
+            ]
+        ]
+    },
+    {
+        "id": "2890f065a60ac819",
+        "type": "http request",
+        "z": "3a1fe710368e588a",
+        "name": "",
+        "method": "use",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 910,
+        "y": 540,
+        "wires": [
+            [
+                "555d31eab7c73421",
+                "a3ab9760282dc1be"
+            ]
+        ]
+    },
+    {
+        "id": "b0a905d83619df43",
+        "type": "function",
+        "z": "3a1fe710368e588a",
+        "name": "hlavička",
+        "func": "// V Node-RED HTTP Request node nastav:\n\n//  Parametry:\n//  command_state - DISABLED / ENABLED\n//  command_type - SELLING_INSTEAD_OF_BATTERY_CHARGE / SELLING_FROM_BATTERY / USING_FROM_GRID_INSTEAD_OF_BATTERY / SAVING_TO_BATTERY / BLOCKING_GRID_OVERFLOW\n\n\nlet command_type = msg.command_type;\nlet command_state = msg.command_state;\nlet inverterId =  msg.inverter_id;\nconst payload = {\n    \"0\": {\n        \"json\": {\n            \"type\": command_type,\n            \"inverterId\": inverterId,\n            \"state\": command_state\n        }\n    }\n};\n\nmsg.method = \"POST\";\nmsg.url = \"https://proteus.deltagreen.cz/api/trpc/inverters.controls.updateManualControl?batch=1\";\n\nmsg.payload = payload;\n\n\n// V function node před HTTP Request:\nmsg.headers = {\n    'accept': '*/*',\n    'accept-encoding': 'gzip, deflate, br, zstd',\n    'accept-language': 'cs-CZ,cs;q=0.9',\n    'content-type': 'application/json',\n    'cookie': `proteus_session=${msg.proteus_session}; proteus_csrf=${msg.proteus_csrf}`,\n    'priority': 'u=1, i',\n    'referer': 'https://proteus.deltagreen.cz/cs/device/inverter/clwhov40a000h68eaxope0qk3/plan',\n    'sec-ch-ua': '\"Not)A;Brand\";v=\"8\", \"Chromium\";v=\"138\", \"Google Chrome\";v=\"138\"',\n    'sec-ch-ua-mobile': '?0',\n    'sec-ch-ua-platform': '\"Windows\"',\n    'sec-fetch-dest': 'empty',\n    'sec-fetch-mode': 'cors',\n    'sec-fetch-site': 'same-origin',\n    'trpc-accept': 'application/jsonl',\n    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',\n    'x-proteus-csrf': msg.proteus_csrf\n};\n\nreturn msg;\n\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 760,
+        "y": 540,
+        "wires": [
+            [
+                "2890f065a60ac819"
+            ]
+        ]
+    },
+    {
+        "id": "2c25ea22d30d182e",
+        "type": "inject",
+        "z": "3a1fe710368e588a",
+        "name": "TYPE & STATE",
+        "props": [
+            {
+                "p": "command_type",
+                "v": "BLOCKING_GRID_OVERFLOW",
+                "vt": "str"
+            },
+            {
+                "p": "command_state",
+                "v": "TRUE",
+                "vt": "str"
+            }
+        ],
         "repeat": "",
         "crontab": "",
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "x": 210,
-        "y": 820,
+        "x": 140,
+        "y": 480,
         "wires": [
             [
-                "2b9346746c452f92"
+                "74bbdf1fc3d28fef"
             ]
         ]
     },
     {
-        "id": "2b9346746c452f92",
-        "type": "exec",
-        "z": "f790aed9b99d17d7",
-        "command": "node \"C:\\Users\\user\\Documents\\scripts\\vypnout-flexi.js\"",
-        "addpay": false,
-        "append": "",
-        "useSpawn": "false",
-        "timer": "",
-        "winHide": false,
-        "name": "Spusť skript",
-        "x": 430,
-        "y": 820,
+        "id": "3d5a1a7e07e96857",
+        "type": "http request",
+        "z": "3a1fe710368e588a",
+        "name": "",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "https://proteus.deltagreen.cz/api/trpc/users.loginWithEmailAndPassword",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [
+            {
+                "keyType": "other",
+                "keyValue": "Origin",
+                "valueType": "other",
+                "valueValue": "https://proteus.deltagreen.cz"
+            },
+            {
+                "keyType": "other",
+                "keyValue": "Referer",
+                "valueType": "other",
+                "valueValue": "https://proteus.deltagreen.cz/cs/auth/login/email-and-password"
+            },
+            {
+                "keyType": "User-Agent",
+                "keyValue": "",
+                "valueType": "other",
+                "valueValue": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+            },
+            {
+                "keyType": "Content-Type",
+                "keyValue": "",
+                "valueType": "other",
+                "valueValue": "application/json"
+            }
+        ],
+        "x": 890,
+        "y": 480,
         "wires": [
-            [],
-            [],
+            [
+                "d2dfdfae7a8ab4de"
+            ]
+        ]
+    },
+    {
+        "id": "d2dfdfae7a8ab4de",
+        "type": "function",
+        "z": "3a1fe710368e588a",
+        "name": "Save cookies + připrav hlavičky",
+        "func": "let status = msg.statusCode;\nlet cookies = msg.headers['set-cookie'] || [];\n\nlet proteus_session = null;\nlet proteus_csrf = null;\n\nif (cookies.length) {\n  cookies.forEach(cookie => {\n    if (cookie.includes('proteus_session=')) {\n      proteus_session = cookie.split('proteus_session=')[1].split(';')[0];\n    }\n    if (cookie.includes('proteus_csrf=')) {\n      proteus_csrf = cookie.split('proteus_csrf=')[1].split(';')[0];\n    }\n  });\n}\n\nlet session = proteus_session;\nlet csrf = proteus_csrf;\n\n\nconst input = {\n  householdId: \"clwhorwkp000968eabhkb5nu0\"\n};\n\nmsg.login_status = (status === 200) ? 'OK' : 'Chyba';\nmsg.proteus_session = proteus_session || '';\nmsg.proteus_csrf = proteus_csrf || '';\nmsg.proteus_session = proteus_session;\nmsg.proteus_csrf = proteus_csrf;\n\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1110,
+        "y": 480,
+        "wires": [
+            [
+                "b0a905d83619df43"
+            ]
+        ]
+    },
+    {
+        "id": "a5148c4097bad8d5",
+        "type": "function",
+        "z": "3a1fe710368e588a",
+        "name": "Login",
+        "func": "msg.payload = {\n  json: {\n    tenantId: \"TID_DELTA_GREEN\",\n    email: msg.email || \"tvuj.email@domena.cz\",\n    password: msg.password || \"tvojeheslo\"\n  }\n};\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 750,
+        "y": 480,
+        "wires": [
+            [
+                "3d5a1a7e07e96857"
+            ]
+        ]
+    },
+    {
+        "id": "74bbdf1fc3d28fef",
+        "type": "api-current-state",
+        "z": "3a1fe710368e588a",
+        "name": "email",
+        "server": "df8e5a1.6b96ca8",
+        "version": 3,
+        "outputs": 1,
+        "halt_if": "",
+        "halt_if_type": "str",
+        "halt_if_compare": "is",
+        "entity_id": "text.e_mail",
+        "state_type": "str",
+        "blockInputOverrides": true,
+        "outputProperties": [
+            {
+                "property": "email",
+                "propertyType": "msg",
+                "value": "",
+                "valueType": "entityState"
+            }
+        ],
+        "for": "0",
+        "forType": "num",
+        "forUnits": "minutes",
+        "override_topic": false,
+        "state_location": "payload",
+        "override_payload": "msg",
+        "entity_location": "data",
+        "override_data": "msg",
+        "x": 510,
+        "y": 480,
+        "wires": [
+            [
+                "9465b8f2064349c7"
+            ]
+        ]
+    },
+    {
+        "id": "9465b8f2064349c7",
+        "type": "api-current-state",
+        "z": "3a1fe710368e588a",
+        "name": "pswd",
+        "server": "df8e5a1.6b96ca8",
+        "version": 3,
+        "outputs": 1,
+        "halt_if": "",
+        "halt_if_type": "str",
+        "halt_if_compare": "is",
+        "entity_id": "text.heslo",
+        "state_type": "str",
+        "blockInputOverrides": true,
+        "outputProperties": [
+            {
+                "property": "password",
+                "propertyType": "msg",
+                "value": "",
+                "valueType": "entityState"
+            }
+        ],
+        "for": "0",
+        "forType": "num",
+        "forUnits": "minutes",
+        "override_topic": false,
+        "state_location": "payload",
+        "override_payload": "msg",
+        "entity_location": "data",
+        "override_data": "msg",
+        "x": 530,
+        "y": 480,
+        "wires": [
+            [
+                "1432292ff45a0ebb"
+            ]
+        ]
+    },
+    {
+        "id": "1432292ff45a0ebb",
+        "type": "api-current-state",
+        "z": "3a1fe710368e588a",
+        "name": "inverter ID",
+        "server": "df8e5a1.6b96ca8",
+        "version": 3,
+        "outputs": 1,
+        "halt_if": "",
+        "halt_if_type": "str",
+        "halt_if_compare": "is",
+        "entity_id": "text.inverterid",
+        "state_type": "str",
+        "blockInputOverrides": true,
+        "outputProperties": [
+            {
+                "property": "inverter_id",
+                "propertyType": "msg",
+                "value": "",
+                "valueType": "entityState"
+            }
+        ],
+        "for": "0",
+        "forType": "num",
+        "forUnits": "minutes",
+        "override_topic": false,
+        "state_location": "payload",
+        "override_payload": "msg",
+        "entity_location": "data",
+        "override_data": "msg",
+        "x": 570,
+        "y": 480,
+        "wires": [
+            [
+                "a5148c4097bad8d5"
+            ]
+        ]
+    },
+    {
+        "id": "a6b5a81261275735",
+        "type": "comment",
+        "z": "3a1fe710368e588a",
+        "name": "možnosti příkazů",
+        "info": "command_state:\n    DISABLED\n    ENABLED\n\ncommand_type:\n    SELLING_INSTEAD_OF_BATTERY_CHARGE\n    SELLING_FROM_BATTERY\n    USING_FROM_GRID_INSTEAD_OF_BATTERY\n    SAVING_TO_BATTERY\n    BLOCKING_GRID_OVERFLOW\n\nřízení command_state:\n    MANUAL\n    AUTOMATIC\n\nflexibilita command_state:\n    true\n    false\n\n\n  0 \"inverters.detail\",\n  1 \"inverters.flexibilityRewardsSummary\",\n  2 \"inverters.controls.state\",\n  3 \"commands.current\",\n  4 \"inverters.currentStep\"\n  \npayload.raw[0][2].result.data.json.controlEnabled\n\ninverters.controls.state",
+        "x": 140,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "a693b0caf463b468",
+        "type": "api-current-state",
+        "z": "3a1fe710368e588a",
+        "name": "inverter ID",
+        "server": "df8e5a1.6b96ca8",
+        "version": 3,
+        "outputs": 1,
+        "halt_if": "",
+        "halt_if_type": "str",
+        "halt_if_compare": "is",
+        "entity_id": "text.inverterid",
+        "state_type": "str",
+        "blockInputOverrides": true,
+        "outputProperties": [
+            {
+                "property": "inverter_id",
+                "propertyType": "msg",
+                "value": "",
+                "valueType": "entityState"
+            }
+        ],
+        "for": "0",
+        "forType": "num",
+        "forUnits": "minutes",
+        "override_topic": false,
+        "state_location": "payload",
+        "override_payload": "msg",
+        "entity_location": "data",
+        "override_data": "msg",
+        "x": 410,
+        "y": 60,
+        "wires": [
+            [
+                "f70cb7acc8e6e806"
+            ]
+        ]
+    },
+    {
+        "id": "c980c48b6913d194",
+        "type": "function",
+        "z": "3a1fe710368e588a",
+        "name": "Výběr dat",
+        "func": "// Překlad režimů baterie do češtiny\nconst batteryModeTranslations = {\n    \"discharge_to_grid\": \"Vybíjí baterii do sítě\",\n    \"do_not_charge\": \"Nenabíjí\",\n    \"charge_from_pv\": \"Nabíjí pouze z FVE\",\n    \"charge_from_grid\": \"Nabíjí ze sítě\",\n    \"discharge_to_household\": \"Vybíjení do domácnosti\",\n    \"idle\": \"Nečinný\",\n    \"unrestricted\": \"Bez omezení\",\n    \"standby\": \"Pohotovostní režim\"\n    // Přidej další, pokud se objeví nové stavy\n};\n\n// Základní hodnoty\nlet proteus = {\n    \"Proteus flexibilita dostupná\": msg.payload?.raw?.[0]?.[0]?.result?.data?.json?.household?.flexibilityState ?? null,\n    \"Proteus režim\": msg.payload?.raw?.[0]?.[0]?.result?.data?.json?.controlMode ?? null,\n    \"Proteus obchodování flexibility dnes\": msg.payload?.raw?.[0]?.[1]?.result?.data?.json?.todayWithVat ?? null,\n    \"Proteus obchodování flexibility za měsíc\": msg.payload?.raw?.[0]?.[1]?.result?.data?.json?.monthToDateWithVat ?? null,\n    \"Proteus obchodování flexibility celkem\": msg.payload?.raw?.[0]?.[1]?.result?.data?.json?.totalWithVat ?? null,\n    \"Proteus příkaz flexibility\": msg.payload?.raw?.[0]?.[3]?.result?.data?.json?.command?.type ?? \"Žádný\",\n    \"Proteus konec flexibility\": msg.payload?.raw?.[0]?.[3]?.result?.data?.json?.command?.endAt ?? null,\n\n    // Překlady režimů baterie\n    \"Proteus režim baterie\": batteryModeTranslations[\n        msg.payload?.raw?.[0]?.[4]?.result?.data?.json?.metadata?.flexalgoBattery\n    ] ?? msg.payload?.raw?.[0]?.[4]?.result?.data?.json?.metadata?.flexalgoBattery,\n\n    \"Proteus záložní režim baterie\": batteryModeTranslations[\n        msg.payload?.raw?.[0]?.[4]?.result?.data?.json?.metadata?.flexalgoBatteryFallback\n    ] ?? msg.payload?.raw?.[0]?.[4]?.result?.data?.json?.metadata?.flexalgoBatteryFallback,\n\n    \"Proteus režim výroby\": batteryModeTranslations[\n        msg.payload?.raw?.[0]?.[4]?.result?.data?.json?.metadata?.flexalgoPv\n    ] ?? msg.payload?.raw?.[0]?.[4]?.result?.data?.json?.metadata?.flexalgoPv,\n\n    \n    //\"Proteus režim výroby\": msg.payload?.raw?.[0]?.[4]?.result?.data?.json?.metadata?.flexalgoPv ?? null,\n    \n    \"Proteus cílový SOC\": msg.payload?.raw?.[0]?.[4]?.result?.data?.json?.metadata?.targetSoC ?? null,\n    \"Proteus odhad výroby\": msg.payload?.raw?.[0]?.[4]?.result?.data?.json?.metadata?.predictedProduction ?? null,\n    \"Proteus odhad spotřeby\": msg.payload?.raw?.[0]?.[4]?.result?.data?.json?.metadata?.predictedConsumption ?? null,\n    \"Proteus povolení flexibility\": msg.payload?.raw?.[0]?.[2]?.result?.data?.json?.flexibilityEnabled ?? null\n};\n\n// Binární hodnoty (manualControls)\nlet manualControls = msg.payload?.raw?.[0]?.[2]?.result?.data?.json?.manualControls ?? [];\n\nfunction isEnabled(type) {\n    return manualControls.find(entry => entry.type === type)?.state === 'ENABLED' || false;\n}\n\nproteus[\"Proteus prodej do sítě místo nabíjení\"] = isEnabled(\"SELLING_INSTEAD_OF_BATTERY_CHARGE\");\nproteus[\"Proteus prodej z baterie do sítě\"] = isEnabled(\"SELLING_FROM_BATTERY\");\nproteus[\"Proteus šetření energie v baterii\"] = isEnabled(\"USING_FROM_GRID_INSTEAD_OF_BATTERY\");\nproteus[\"Proteus nabíjení baterie ze sítě\"] = isEnabled(\"SAVING_TO_BATTERY\");\nproteus[\"Proteus zákaz přetoků\"] = isEnabled(\"BLOCKING_GRID_OVERFLOW\");\n\n// Výstup\nmsg.proteus = proteus;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 960,
+        "y": 200,
+        "wires": [
+            [
+                "8cb2621b6ca031ce",
+                "2e34df27e10e781d",
+                "f3aaba4c89e8b379",
+                "5cda3eb85c2e8ac3",
+                "a1981ba35749c1bc",
+                "a950fda6d647459c",
+                "1a35ad1b42e5c4da",
+                "d35fa047508e7e28",
+                "ff902fd9d2e7890e",
+                "add76755ad7b0395",
+                "5d7c5d393b0fad85",
+                "2d88125b464d6122",
+                "4084bb96bd4f833a",
+                "d4bf72378797d070"
+            ]
+        ]
+    },
+    {
+        "id": "bf35a99773805752",
+        "type": "function",
+        "z": "3a1fe710368e588a",
+        "name": "Řízení",
+        "func": "// V Node-RED HTTP Request node nastav:\n\n//  Parametry:\n//  command_state - DISABLED / ENABLED\n//  command_type - SELLING_INSTEAD_OF_BATTERY_CHARGE / SELLING_FROM_BATTERY / USING_FROM_GRID_INSTEAD_OF_BATTERY / SAVING_TO_BATTERY / BLOCKING_GRID_OVERFLOW\n\nlet command_state = msg.command_state;\nlet inverterId =  msg.inverter_id;\nconst payload = {\n    \"0\": {\n        \"json\": {\n            \"inverterId\": inverterId,\n            \"controlMode\":command_state\n        }\n    }\n};\n\nmsg.method = \"POST\";\nmsg.url = \"https://proteus.deltagreen.cz/api/trpc/inverters.controls.updateControlMode?batch=1\";\nmsg.payload = payload;\n\n\n// V function node před HTTP Request:\nmsg.headers = {\n    'accept': '*/*',\n    'accept-encoding': 'gzip, deflate, br, zstd',\n    'accept-language': 'cs-CZ,cs;q=0.9',\n    'content-type': 'application/json',\n    'cookie': `proteus_session=${msg.proteus_session}; proteus_csrf=${msg.proteus_csrf}`,\n    'priority': 'u=1, i',\n    'referer': 'https://proteus.deltagreen.cz/cs/device/inverter/clwhov40a000h68eaxope0qk3/plan',\n    'sec-ch-ua': '\"Not)A;Brand\";v=\"8\", \"Chromium\";v=\"138\", \"Google Chrome\";v=\"138\"',\n    'sec-ch-ua-mobile': '?0',\n    'sec-ch-ua-platform': '\"Windows\"',\n    'sec-fetch-dest': 'empty',\n    'sec-fetch-mode': 'cors',\n    'sec-fetch-site': 'same-origin',\n    'trpc-accept': 'application/jsonl',\n    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',\n    'x-proteus-csrf': msg.proteus_csrf\n};\n\nreturn msg;\n\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 750,
+        "y": 680,
+        "wires": [
+            [
+                "601aea7980995233"
+            ]
+        ]
+    },
+    {
+        "id": "601aea7980995233",
+        "type": "http request",
+        "z": "3a1fe710368e588a",
+        "name": "",
+        "method": "use",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 910,
+        "y": 680,
+        "wires": [
+            [
+                "92db862a40392857",
+                "a3ab9760282dc1be"
+            ]
+        ]
+    },
+    {
+        "id": "d5be5ad09aa199f8",
+        "type": "function",
+        "z": "3a1fe710368e588a",
+        "name": "Flexibilita",
+        "func": "// V Node-RED HTTP Request node nastav:\n\n//  Parametry:\n//  command_state - DISABLED / ENABLED\n//  command_type - SELLING_INSTEAD_OF_BATTERY_CHARGE / SELLING_FROM_BATTERY / USING_FROM_GRID_INSTEAD_OF_BATTERY / SAVING_TO_BATTERY / BLOCKING_GRID_OVERFLOW\n\nlet command_state = msg.command_state;\nlet inverterId =  msg.inverter_id;\nconst payload = {\n    \"0\": {\n        \"json\": {\n            \"inverterId\": inverterId,\n            \"flexibilityEnabled\": command_state\n        }\n    }\n};\n\nmsg.method = \"POST\";\nmsg.url = \"https://proteus.deltagreen.cz/api/trpc/inverters.controls.updateFlexibilityEnabled?batch=1\";\n\nmsg.payload = payload;\n\n\n// V function node před HTTP Request:\nmsg.headers = {\n    'accept': '*/*',\n    'accept-encoding': 'gzip, deflate, br, zstd',\n    'accept-language': 'cs-CZ,cs;q=0.9',\n    'content-type': 'application/json',\n    'cookie': `proteus_session=${msg.proteus_session}; proteus_csrf=${msg.proteus_csrf}`,\n    'priority': 'u=1, i',\n    'referer': 'https://proteus.deltagreen.cz/cs/device/inverter/clwhov40a000h68eaxope0qk3/plan',\n    'sec-ch-ua': '\"Not)A;Brand\";v=\"8\", \"Chromium\";v=\"138\", \"Google Chrome\";v=\"138\"',\n    'sec-ch-ua-mobile': '?0',\n    'sec-ch-ua-platform': '\"Windows\"',\n    'sec-fetch-dest': 'empty',\n    'sec-fetch-mode': 'cors',\n    'sec-fetch-site': 'same-origin',\n    'trpc-accept': 'application/jsonl',\n    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',\n    'x-proteus-csrf': msg.proteus_csrf\n};\n\nreturn msg;\n\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 760,
+        "y": 840,
+        "wires": [
+            [
+                "1f4f95f5aff30de4"
+            ]
+        ]
+    },
+    {
+        "id": "1f4f95f5aff30de4",
+        "type": "http request",
+        "z": "3a1fe710368e588a",
+        "name": "",
+        "method": "use",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 910,
+        "y": 840,
+        "wires": [
+            [
+                "1c09f98341b8d2b9"
+            ]
+        ]
+    },
+    {
+        "id": "c15328edd0f8c0e0",
+        "type": "http request",
+        "z": "3a1fe710368e588a",
+        "name": "",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "https://proteus.deltagreen.cz/api/trpc/users.loginWithEmailAndPassword",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [
+            {
+                "keyType": "other",
+                "keyValue": "Origin",
+                "valueType": "other",
+                "valueValue": "https://proteus.deltagreen.cz"
+            },
+            {
+                "keyType": "other",
+                "keyValue": "Referer",
+                "valueType": "other",
+                "valueValue": "https://proteus.deltagreen.cz/cs/auth/login/email-and-password"
+            },
+            {
+                "keyType": "User-Agent",
+                "keyValue": "",
+                "valueType": "other",
+                "valueValue": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+            },
+            {
+                "keyType": "Content-Type",
+                "keyValue": "",
+                "valueType": "other",
+                "valueValue": "application/json"
+            }
+        ],
+        "x": 890,
+        "y": 620,
+        "wires": [
+            [
+                "242b1f6d50754d08"
+            ]
+        ]
+    },
+    {
+        "id": "242b1f6d50754d08",
+        "type": "function",
+        "z": "3a1fe710368e588a",
+        "name": "Save cookies + připrav hlavičky",
+        "func": "let status = msg.statusCode;\nlet cookies = msg.headers['set-cookie'] || [];\n\nlet proteus_session = null;\nlet proteus_csrf = null;\n\nif (cookies.length) {\n  cookies.forEach(cookie => {\n    if (cookie.includes('proteus_session=')) {\n      proteus_session = cookie.split('proteus_session=')[1].split(';')[0];\n    }\n    if (cookie.includes('proteus_csrf=')) {\n      proteus_csrf = cookie.split('proteus_csrf=')[1].split(';')[0];\n    }\n  });\n}\n\nlet session = proteus_session;\nlet csrf = proteus_csrf;\n\n\nconst input = {\n  householdId: \"clwhorwkp000968eabhkb5nu0\"\n};\n\nmsg.login_status = (status === 200) ? 'OK' : 'Chyba';\nmsg.proteus_session = proteus_session || '';\nmsg.proteus_csrf = proteus_csrf || '';\nmsg.proteus_session = proteus_session;\nmsg.proteus_csrf = proteus_csrf;\n\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1110,
+        "y": 620,
+        "wires": [
+            [
+                "bf35a99773805752"
+            ]
+        ]
+    },
+    {
+        "id": "714048bf78261cad",
+        "type": "function",
+        "z": "3a1fe710368e588a",
+        "name": "Login",
+        "func": "msg.payload = {\n  json: {\n    tenantId: \"TID_DELTA_GREEN\",\n    email: msg.email || \"tvuj.email@domena.cz\",\n    password: msg.password || \"tvojeheslo\"\n  }\n};\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 750,
+        "y": 620,
+        "wires": [
+            [
+                "c15328edd0f8c0e0"
+            ]
+        ]
+    },
+    {
+        "id": "8c40467ed99ed55a",
+        "type": "api-current-state",
+        "z": "3a1fe710368e588a",
+        "name": "email",
+        "server": "df8e5a1.6b96ca8",
+        "version": 3,
+        "outputs": 1,
+        "halt_if": "",
+        "halt_if_type": "str",
+        "halt_if_compare": "is",
+        "entity_id": "text.e_mail",
+        "state_type": "str",
+        "blockInputOverrides": true,
+        "outputProperties": [
+            {
+                "property": "email",
+                "propertyType": "msg",
+                "value": "",
+                "valueType": "entityState"
+            }
+        ],
+        "for": "0",
+        "forType": "num",
+        "forUnits": "minutes",
+        "override_topic": false,
+        "state_location": "payload",
+        "override_payload": "msg",
+        "entity_location": "data",
+        "override_data": "msg",
+        "x": 510,
+        "y": 620,
+        "wires": [
+            [
+                "37e566c5e4f719c2"
+            ]
+        ]
+    },
+    {
+        "id": "37e566c5e4f719c2",
+        "type": "api-current-state",
+        "z": "3a1fe710368e588a",
+        "name": "pswd",
+        "server": "df8e5a1.6b96ca8",
+        "version": 3,
+        "outputs": 1,
+        "halt_if": "",
+        "halt_if_type": "str",
+        "halt_if_compare": "is",
+        "entity_id": "text.heslo",
+        "state_type": "str",
+        "blockInputOverrides": true,
+        "outputProperties": [
+            {
+                "property": "password",
+                "propertyType": "msg",
+                "value": "",
+                "valueType": "entityState"
+            }
+        ],
+        "for": "0",
+        "forType": "num",
+        "forUnits": "minutes",
+        "override_topic": false,
+        "state_location": "payload",
+        "override_payload": "msg",
+        "entity_location": "data",
+        "override_data": "msg",
+        "x": 530,
+        "y": 620,
+        "wires": [
+            [
+                "ab6b50c86c7c3a87"
+            ]
+        ]
+    },
+    {
+        "id": "ab6b50c86c7c3a87",
+        "type": "api-current-state",
+        "z": "3a1fe710368e588a",
+        "name": "inverter ID",
+        "server": "df8e5a1.6b96ca8",
+        "version": 3,
+        "outputs": 1,
+        "halt_if": "",
+        "halt_if_type": "str",
+        "halt_if_compare": "is",
+        "entity_id": "text.inverterid",
+        "state_type": "str",
+        "blockInputOverrides": true,
+        "outputProperties": [
+            {
+                "property": "inverter_id",
+                "propertyType": "msg",
+                "value": "",
+                "valueType": "entityState"
+            }
+        ],
+        "for": "0",
+        "forType": "num",
+        "forUnits": "minutes",
+        "override_topic": false,
+        "state_location": "payload",
+        "override_payload": "msg",
+        "entity_location": "data",
+        "override_data": "msg",
+        "x": 570,
+        "y": 620,
+        "wires": [
+            [
+                "714048bf78261cad"
+            ]
+        ]
+    },
+    {
+        "id": "76302bfcd773212f",
+        "type": "http request",
+        "z": "3a1fe710368e588a",
+        "name": "",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "https://proteus.deltagreen.cz/api/trpc/users.loginWithEmailAndPassword",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [
+            {
+                "keyType": "other",
+                "keyValue": "Origin",
+                "valueType": "other",
+                "valueValue": "https://proteus.deltagreen.cz"
+            },
+            {
+                "keyType": "other",
+                "keyValue": "Referer",
+                "valueType": "other",
+                "valueValue": "https://proteus.deltagreen.cz/cs/auth/login/email-and-password"
+            },
+            {
+                "keyType": "User-Agent",
+                "keyValue": "",
+                "valueType": "other",
+                "valueValue": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+            },
+            {
+                "keyType": "Content-Type",
+                "keyValue": "",
+                "valueType": "other",
+                "valueValue": "application/json"
+            }
+        ],
+        "x": 890,
+        "y": 780,
+        "wires": [
+            [
+                "96298960f81502db"
+            ]
+        ]
+    },
+    {
+        "id": "96298960f81502db",
+        "type": "function",
+        "z": "3a1fe710368e588a",
+        "name": "Save cookies + připrav hlavičky",
+        "func": "let status = msg.statusCode;\nlet cookies = msg.headers['set-cookie'] || [];\n\nlet proteus_session = null;\nlet proteus_csrf = null;\n\nif (cookies.length) {\n  cookies.forEach(cookie => {\n    if (cookie.includes('proteus_session=')) {\n      proteus_session = cookie.split('proteus_session=')[1].split(';')[0];\n    }\n    if (cookie.includes('proteus_csrf=')) {\n      proteus_csrf = cookie.split('proteus_csrf=')[1].split(';')[0];\n    }\n  });\n}\n\nlet session = proteus_session;\nlet csrf = proteus_csrf;\n\n\nconst input = {\n  householdId: \"clwhorwkp000968eabhkb5nu0\"\n};\n\nmsg.login_status = (status === 200) ? 'OK' : 'Chyba';\nmsg.proteus_session = proteus_session || '';\nmsg.proteus_csrf = proteus_csrf || '';\nmsg.proteus_session = proteus_session;\nmsg.proteus_csrf = proteus_csrf;\n\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1110,
+        "y": 780,
+        "wires": [
+            [
+                "d5be5ad09aa199f8"
+            ]
+        ]
+    },
+    {
+        "id": "9983436769cc8d76",
+        "type": "function",
+        "z": "3a1fe710368e588a",
+        "name": "Login",
+        "func": "msg.payload = {\n  json: {\n    tenantId: \"TID_DELTA_GREEN\",\n    email: msg.email || \"tvuj.email@domena.cz\",\n    password: msg.password || \"tvojeheslo\"\n  }\n};\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 750,
+        "y": 780,
+        "wires": [
+            [
+                "76302bfcd773212f"
+            ]
+        ]
+    },
+    {
+        "id": "b1dec17f210b868e",
+        "type": "api-current-state",
+        "z": "3a1fe710368e588a",
+        "name": "email",
+        "server": "df8e5a1.6b96ca8",
+        "version": 3,
+        "outputs": 1,
+        "halt_if": "",
+        "halt_if_type": "str",
+        "halt_if_compare": "is",
+        "entity_id": "text.e_mail",
+        "state_type": "str",
+        "blockInputOverrides": true,
+        "outputProperties": [
+            {
+                "property": "email",
+                "propertyType": "msg",
+                "value": "",
+                "valueType": "entityState"
+            }
+        ],
+        "for": "0",
+        "forType": "num",
+        "forUnits": "minutes",
+        "override_topic": false,
+        "state_location": "payload",
+        "override_payload": "msg",
+        "entity_location": "data",
+        "override_data": "msg",
+        "x": 510,
+        "y": 780,
+        "wires": [
+            [
+                "1f150fe88e2022ce"
+            ]
+        ]
+    },
+    {
+        "id": "1f150fe88e2022ce",
+        "type": "api-current-state",
+        "z": "3a1fe710368e588a",
+        "name": "pswd",
+        "server": "df8e5a1.6b96ca8",
+        "version": 3,
+        "outputs": 1,
+        "halt_if": "",
+        "halt_if_type": "str",
+        "halt_if_compare": "is",
+        "entity_id": "text.heslo",
+        "state_type": "str",
+        "blockInputOverrides": true,
+        "outputProperties": [
+            {
+                "property": "password",
+                "propertyType": "msg",
+                "value": "",
+                "valueType": "entityState"
+            }
+        ],
+        "for": "0",
+        "forType": "num",
+        "forUnits": "minutes",
+        "override_topic": false,
+        "state_location": "payload",
+        "override_payload": "msg",
+        "entity_location": "data",
+        "override_data": "msg",
+        "x": 530,
+        "y": 780,
+        "wires": [
+            [
+                "bb73abee4418cbdc"
+            ]
+        ]
+    },
+    {
+        "id": "bb73abee4418cbdc",
+        "type": "api-current-state",
+        "z": "3a1fe710368e588a",
+        "name": "inverter ID",
+        "server": "df8e5a1.6b96ca8",
+        "version": 3,
+        "outputs": 1,
+        "halt_if": "",
+        "halt_if_type": "str",
+        "halt_if_compare": "is",
+        "entity_id": "text.inverterid",
+        "state_type": "str",
+        "blockInputOverrides": true,
+        "outputProperties": [
+            {
+                "property": "inverter_id",
+                "propertyType": "msg",
+                "value": "",
+                "valueType": "entityState"
+            }
+        ],
+        "for": "0",
+        "forType": "num",
+        "forUnits": "minutes",
+        "override_topic": false,
+        "state_location": "payload",
+        "override_payload": "msg",
+        "entity_location": "data",
+        "override_data": "msg",
+        "x": 570,
+        "y": 780,
+        "wires": [
+            [
+                "9983436769cc8d76"
+            ]
+        ]
+    },
+    {
+        "id": "ae357b12f18cbf33",
+        "type": "ha-switch",
+        "z": "3a1fe710368e588a",
+        "name": "Flexibilita",
+        "version": 0,
+        "debugenabled": false,
+        "inputs": 0,
+        "outputs": 2,
+        "entityConfig": "9612c2e051255520",
+        "enableInput": false,
+        "outputOnStateChange": true,
+        "outputProperties": [],
+        "x": 100,
+        "y": 780,
+        "wires": [
+            [
+                "9c084fb476230830"
+            ],
+            [
+                "14c8a0e8df8d213b"
+            ]
+        ]
+    },
+    {
+        "id": "9c084fb476230830",
+        "type": "change",
+        "z": "3a1fe710368e588a",
+        "name": "true",
+        "rules": [
+            {
+                "t": "set",
+                "p": "command_state",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 350,
+        "y": 760,
+        "wires": [
+            [
+                "b1dec17f210b868e"
+            ]
+        ]
+    },
+    {
+        "id": "14c8a0e8df8d213b",
+        "type": "change",
+        "z": "3a1fe710368e588a",
+        "name": "false",
+        "rules": [
+            {
+                "t": "set",
+                "p": "command_state",
+                "pt": "msg",
+                "to": "false",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 350,
+        "y": 800,
+        "wires": [
+            [
+                "b1dec17f210b868e"
+            ]
+        ]
+    },
+    {
+        "id": "f145e8cad2ed97fa",
+        "type": "ha-switch",
+        "z": "3a1fe710368e588a",
+        "name": "Optimalizace algoritmem",
+        "version": 0,
+        "debugenabled": false,
+        "inputs": 0,
+        "outputs": 2,
+        "entityConfig": "db60499e14d31d5f",
+        "enableInput": false,
+        "outputOnStateChange": true,
+        "outputProperties": [],
+        "x": 150,
+        "y": 620,
+        "wires": [
+            [
+                "185f7e4e8e6e5d88"
+            ],
+            [
+                "73c6b296a5e39ffe"
+            ]
+        ]
+    },
+    {
+        "id": "73c6b296a5e39ffe",
+        "type": "change",
+        "z": "3a1fe710368e588a",
+        "name": " MANUAL",
+        "rules": [
+            {
+                "t": "set",
+                "p": "command_state",
+                "pt": "msg",
+                "to": "MANUAL",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 360,
+        "y": 640,
+        "wires": [
+            [
+                "8c40467ed99ed55a"
+            ]
+        ]
+    },
+    {
+        "id": "185f7e4e8e6e5d88",
+        "type": "change",
+        "z": "3a1fe710368e588a",
+        "name": "AUTOMATIC",
+        "rules": [
+            {
+                "t": "set",
+                "p": "command_state",
+                "pt": "msg",
+                "to": "AUTOMATIC",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 370,
+        "y": 600,
+        "wires": [
+            [
+                "8c40467ed99ed55a"
+            ]
+        ]
+    },
+    {
+        "id": "bc8039faed1449b9",
+        "type": "ha-sensor",
+        "z": "3a1fe710368e588a",
+        "name": "API status",
+        "entityConfig": "bdf49a6ab330d253",
+        "version": 0,
+        "state": "login_status",
+        "stateType": "msg",
+        "attributes": [],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 1170,
+        "y": 60,
+        "wires": [
             []
         ]
     },
     {
-        "id": "b78c5de311578c2a",
-        "type": "inject",
-        "z": "f790aed9b99d17d7",
-        "name": "Zapnout flexi",
-        "props": [],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "x": 210,
-        "y": 880,
+        "id": "2e34df27e10e781d",
+        "type": "ha-sensor",
+        "z": "3a1fe710368e588a",
+        "name": "flexibilita dostupná",
+        "entityConfig": "f2c4c44a0c0f80bc",
+        "version": 0,
+        "state": "proteus[\"Proteus flexibilita dostupná\"]",
+        "stateType": "msg",
+        "attributes": [],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 1190,
+        "y": 120,
         "wires": [
-            [
-                "139902a422d343a7"
-            ]
-        ]
-    },
-    {
-        "id": "139902a422d343a7",
-        "type": "exec",
-        "z": "f790aed9b99d17d7",
-        "command": "node \"C:\\Users\\user\\Documents\\scripts\\zapnout-flexi.js\"",
-        "addpay": false,
-        "append": "",
-        "useSpawn": "false",
-        "timer": "",
-        "winHide": false,
-        "name": "Spusť skript",
-        "x": 430,
-        "y": 880,
-        "wires": [
-            [],
-            [],
             []
         ]
     },
     {
-        "id": "6cf255c63280843f",
-        "type": "inject",
-        "z": "f790aed9b99d17d7",
-        "name": "Vypnout altoritmus",
-        "props": [],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "x": 230,
-        "y": 940,
+        "id": "f3aaba4c89e8b379",
+        "type": "ha-sensor",
+        "z": "3a1fe710368e588a",
+        "name": "Proteus režim",
+        "entityConfig": "ecf4567ed84045d1",
+        "version": 0,
+        "state": "proteus[\"Proteus režim\"]",
+        "stateType": "msg",
+        "attributes": [],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 1180,
+        "y": 180,
         "wires": [
-            [
-                "4bcf8c5bd20900dc"
-            ]
-        ]
-    },
-    {
-        "id": "4bcf8c5bd20900dc",
-        "type": "exec",
-        "z": "f790aed9b99d17d7",
-        "command": "node \"C:\\Users\\user\\Documents\\scripts\\vypnout-algoritmus.js\"",
-        "addpay": false,
-        "append": "",
-        "useSpawn": "false",
-        "timer": "",
-        "winHide": false,
-        "name": "Spusť skript",
-        "x": 430,
-        "y": 940,
-        "wires": [
-            [],
-            [],
             []
         ]
     },
     {
-        "id": "2795f6d9f8dad63a",
-        "type": "inject",
-        "z": "f790aed9b99d17d7",
-        "name": "Zapnout altoritmus",
-        "props": [],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "x": 230,
-        "y": 1000,
+        "id": "5136baa32a98f605",
+        "type": "link in",
+        "z": "3a1fe710368e588a",
+        "name": "refresh",
+        "links": [
+            "92db862a40392857",
+            "1c09f98341b8d2b9",
+            "555d31eab7c73421"
+        ],
+        "x": 235,
+        "y": 100,
         "wires": [
             [
-                "ddbd3ce25d273470"
+                "4a8a0d4013854e26"
             ]
         ]
     },
     {
-        "id": "ddbd3ce25d273470",
-        "type": "exec",
-        "z": "f790aed9b99d17d7",
-        "command": "node \"C:\\Users\\user\\Documents\\scripts\\zapnout-algoritmus.js\"",
-        "addpay": false,
-        "append": "",
-        "useSpawn": "false",
-        "timer": "",
-        "winHide": false,
-        "name": "Spusť skript",
-        "x": 430,
-        "y": 1000,
+        "id": "1c09f98341b8d2b9",
+        "type": "link out",
+        "z": "3a1fe710368e588a",
+        "name": "link out 1",
+        "mode": "link",
+        "links": [
+            "5136baa32a98f605"
+        ],
+        "x": 1015,
+        "y": 840,
+        "wires": []
+    },
+    {
+        "id": "92db862a40392857",
+        "type": "link out",
+        "z": "3a1fe710368e588a",
+        "name": "link out 2",
+        "mode": "link",
+        "links": [
+            "5136baa32a98f605"
+        ],
+        "x": 1015,
+        "y": 680,
+        "wires": []
+    },
+    {
+        "id": "555d31eab7c73421",
+        "type": "link out",
+        "z": "3a1fe710368e588a",
+        "name": "link out 3",
+        "mode": "link",
+        "links": [
+            "5136baa32a98f605"
+        ],
+        "x": 1015,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "a3ab9760282dc1be",
+        "type": "debug",
+        "z": "3a1fe710368e588a",
+        "name": "debug 17",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1010,
+        "y": 740,
+        "wires": []
+    },
+    {
+        "id": "5cda3eb85c2e8ac3",
+        "type": "ha-sensor",
+        "z": "3a1fe710368e588a",
+        "name": "Obchodování flexibility dnes",
+        "entityConfig": "6d54282639263efa",
+        "version": 0,
+        "state": "proteus[\"Proteus obchodování flexibility dnes\"]",
+        "stateType": "msg",
+        "attributes": [],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 1220,
+        "y": 240,
         "wires": [
-            [],
-            [],
             []
         ]
     },
     {
-        "id": "d5788b82ab9c842d",
-        "type": "inject",
-        "z": "f790aed9b99d17d7",
-        "name": "Přepnout",
-        "props": [],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "x": 200,
-        "y": 1060,
+        "id": "a1981ba35749c1bc",
+        "type": "ha-sensor",
+        "z": "3a1fe710368e588a",
+        "name": "Obchodování flexibility za měsíc",
+        "entityConfig": "2573bcd377d2f902",
+        "version": 0,
+        "state": "proteus[\"Proteus obchodování flexibility za měsíc\"]",
+        "stateType": "msg",
+        "attributes": [],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 1230,
+        "y": 300,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a950fda6d647459c",
+        "type": "ha-sensor",
+        "z": "3a1fe710368e588a",
+        "name": "Obchodování flexibility celkem",
+        "entityConfig": "c52c9a1fcd47ed45",
+        "version": 0,
+        "state": "proteus[\"Proteus obchodování flexibility celkem\"]",
+        "stateType": "msg",
+        "attributes": [],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 1230,
+        "y": 360,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "1a35ad1b42e5c4da",
+        "type": "ha-sensor",
+        "z": "3a1fe710368e588a",
+        "name": "Příkaz flexibility",
+        "entityConfig": "93e0f36633b5e981",
+        "version": 0,
+        "state": "proteus[\"Proteus příkaz flexibility\"]",
+        "stateType": "msg",
+        "attributes": [],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 1180,
+        "y": 420,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d35fa047508e7e28",
+        "type": "ha-sensor",
+        "z": "3a1fe710368e588a",
+        "name": "Konec flexibility",
+        "entityConfig": "efaddbd02b7199da",
+        "version": 0,
+        "state": "proteus[\"Proteus konec flexibility\"]",
+        "stateType": "msg",
+        "attributes": [],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 1520,
+        "y": 60,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ff902fd9d2e7890e",
+        "type": "ha-sensor",
+        "z": "3a1fe710368e588a",
+        "name": "Režim baterie",
+        "entityConfig": "c9bc639f0d546966",
+        "version": 0,
+        "state": "proteus[\"Proteus režim baterie\"]",
+        "stateType": "msg",
+        "attributes": [],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 1520,
+        "y": 120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "add76755ad7b0395",
+        "type": "ha-sensor",
+        "z": "3a1fe710368e588a",
+        "name": "Záložní režim baterie",
+        "entityConfig": "611cd565ac99d74b",
+        "version": 0,
+        "state": "proteus[\"Proteus záložní režim baterie\"]",
+        "stateType": "msg",
+        "attributes": [],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 1540,
+        "y": 180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5d7c5d393b0fad85",
+        "type": "ha-sensor",
+        "z": "3a1fe710368e588a",
+        "name": "Režim výroby",
+        "entityConfig": "cbed720dd93f9b96",
+        "version": 0,
+        "state": "proteus[\"Proteus režim výroby\"]",
+        "stateType": "msg",
+        "attributes": [],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 1520,
+        "y": 240,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2d88125b464d6122",
+        "type": "ha-sensor",
+        "z": "3a1fe710368e588a",
+        "name": "Cílový SOC",
+        "entityConfig": "c5034a5225a20599",
+        "version": 0,
+        "state": "proteus[\"Proteus cílový SOC\"]",
+        "stateType": "msg",
+        "attributes": [],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 1510,
+        "y": 300,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "4084bb96bd4f833a",
+        "type": "ha-sensor",
+        "z": "3a1fe710368e588a",
+        "name": "Odhad výroby",
+        "entityConfig": "33d9f72328fea8e1",
+        "version": 0,
+        "state": "proteus[\"Proteus odhad výroby\"]",
+        "stateType": "msg",
+        "attributes": [],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 1520,
+        "y": 360,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d4bf72378797d070",
+        "type": "ha-sensor",
+        "z": "3a1fe710368e588a",
+        "name": "Odhad spotřeby",
+        "entityConfig": "85c8e0b195c5e38e",
+        "version": 0,
+        "state": "proteus[\"Proteus odhad spotřeby\"]",
+        "stateType": "msg",
+        "attributes": [],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 1520,
+        "y": 420,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f2431968426b7cee",
+        "type": "ha-select",
+        "z": "3a1fe710368e588a",
+        "name": "Manuální příkaz",
+        "version": 1,
+        "debugenabled": false,
+        "inputs": 0,
+        "outputs": 1,
+        "entityConfig": "775783a473698cb9",
+        "exposeAsEntityConfig": "",
+        "mode": "listen",
+        "value": "payload",
+        "valueType": "msg",
+        "outputProperties": [
+            {
+                "property": "payload",
+                "propertyType": "msg",
+                "value": "",
+                "valueType": "value"
+            }
+        ],
+        "x": 140,
+        "y": 360,
         "wires": [
             [
-                "1af07b1d62fa7fca"
+                "37294b5b85705f53",
+                "fafa719eaf372c0d"
             ]
         ]
     },
     {
-        "id": "1af07b1d62fa7fca",
-        "type": "exec",
-        "z": "f790aed9b99d17d7",
-        "command": "node \"C:\\Users\\user\\Documents\\scripts\\prepnout-prodej-z-baterie-do-site.js\"",
-        "addpay": false,
-        "append": "",
-        "useSpawn": "false",
-        "timer": "",
-        "winHide": false,
-        "name": "Prodej z baterie do sítě",
+        "id": "37294b5b85705f53",
+        "type": "debug",
+        "z": "3a1fe710368e588a",
+        "name": "debug 20",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 760,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "fafa719eaf372c0d",
+        "type": "switch",
+        "z": "3a1fe710368e588a",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "neq",
+                "v": "Žádný",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "Žádný",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 310,
+        "y": 360,
+        "wires": [
+            [
+                "73c6b296a5e39ffe",
+                "b364a1c01b97074c",
+                "9244099b96da9bca"
+            ],
+            [
+                "185f7e4e8e6e5d88",
+                "13cb4daa22d013ad"
+            ]
+        ]
+    },
+    {
+        "id": "b364a1c01b97074c",
+        "type": "change",
+        "z": "3a1fe710368e588a",
+        "name": "",
+        "rules": [
+            {
+                "t": "change",
+                "p": "payload",
+                "pt": "msg",
+                "from": "Prodej do sítě místo nabíjení",
+                "fromt": "str",
+                "to": "SELLING_INSTEAD_OF_BATTERY_CHARGE",
+                "tot": "str"
+            },
+            {
+                "t": "change",
+                "p": "payload",
+                "pt": "msg",
+                "from": "Prodej z baterie do sítě",
+                "fromt": "str",
+                "to": "SELLING_FROM_BATTERY",
+                "tot": "str"
+            },
+            {
+                "t": "change",
+                "p": "payload",
+                "pt": "msg",
+                "from": "Šetření energie v baterii",
+                "fromt": "str",
+                "to": "USING_FROM_GRID_INSTEAD_OF_BATTERY",
+                "tot": "str"
+            },
+            {
+                "t": "change",
+                "p": "payload",
+                "pt": "msg",
+                "from": "Nabíjení baterie ze sítě",
+                "fromt": "str",
+                "to": "SAVING_TO_BATTERY",
+                "tot": "str"
+            },
+            {
+                "t": "change",
+                "p": "payload",
+                "pt": "msg",
+                "from": "Zákaz přetoků",
+                "fromt": "str",
+                "to": "BLOCKING_GRID_OVERFLOW",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 500,
+        "y": 360,
+        "wires": [
+            [
+                "3f0e1cd35d7b3e95"
+            ]
+        ]
+    },
+    {
+        "id": "3f0e1cd35d7b3e95",
+        "type": "change",
+        "z": "3a1fe710368e588a",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "command_type",
+                "pt": "msg",
+                "to": "payload",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "command_state",
+                "pt": "msg",
+                "to": "ENABLED",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 680,
+        "y": 360,
+        "wires": [
+            [
+                "37294b5b85705f53",
+                "69d6481db4ea4e91"
+            ]
+        ]
+    },
+    {
+        "id": "13cb4daa22d013ad",
+        "type": "api-call-service",
+        "z": "3a1fe710368e588a",
+        "name": "on",
+        "server": "df8e5a1.6b96ca8",
+        "version": 7,
+        "debugenabled": false,
+        "action": "switch.turn_on",
+        "floorId": [],
+        "areaId": [],
+        "deviceId": [],
+        "entityId": [
+            "switch.optimalizace_algoritmem"
+        ],
+        "labelId": [],
+        "data": "",
+        "dataType": "jsonata",
+        "mergeContext": "",
+        "mustacheAltTags": false,
+        "outputProperties": [],
+        "queue": "none",
+        "blockInputOverrides": true,
+        "domain": "switch",
+        "service": "turn_on",
         "x": 470,
-        "y": 1060,
+        "y": 400,
         "wires": [
-            [],
-            [],
             []
         ]
     },
     {
-        "id": "f693e06860426990",
-        "type": "inject",
-        "z": "f790aed9b99d17d7",
-        "name": "Přepnout",
-        "props": [],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "x": 200,
-        "y": 1120,
-        "wires": [
-            [
-                "efd90c970ce4c1d2"
-            ]
-        ]
-    },
-    {
-        "id": "efd90c970ce4c1d2",
-        "type": "exec",
-        "z": "f790aed9b99d17d7",
-        "command": "node \"C:\\Users\\user\\Documents\\scripts\\prepnout-prodej-do-site-misto-nabijeni.js\"",
-        "addpay": false,
-        "append": "",
-        "useSpawn": "false",
-        "timer": "",
-        "winHide": false,
-        "name": "Prodej do sítě místo nabíjení",
-        "x": 480,
-        "y": 1120,
-        "wires": [
-            [],
-            [],
-            []
-        ]
-    },
-    {
-        "id": "5824c8779f750bde",
-        "type": "inject",
-        "z": "f790aed9b99d17d7",
-        "name": "Přepnout",
-        "props": [],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "x": 200,
-        "y": 1240,
-        "wires": [
-            [
-                "152ae27c773a2dc1"
-            ]
-        ]
-    },
-    {
-        "id": "152ae27c773a2dc1",
-        "type": "exec",
-        "z": "f790aed9b99d17d7",
-        "command": "node \"C:\\Users\\user\\Documents\\scripts\\prepnout-nabijeni-baterie-ze-site.js\"",
-        "addpay": false,
-        "append": "",
-        "useSpawn": "false",
-        "timer": "",
-        "winHide": false,
-        "name": "Nabíjení baterie ze sítě",
+        "id": "9244099b96da9bca",
+        "type": "api-call-service",
+        "z": "3a1fe710368e588a",
+        "name": "off",
+        "server": "df8e5a1.6b96ca8",
+        "version": 7,
+        "debugenabled": false,
+        "action": "switch.turn_off",
+        "floorId": [],
+        "areaId": [],
+        "deviceId": [],
+        "entityId": [
+            "switch.optimalizace_algoritmem"
+        ],
+        "labelId": [],
+        "data": "",
+        "dataType": "jsonata",
+        "mergeContext": "",
+        "mustacheAltTags": false,
+        "outputProperties": [],
+        "queue": "none",
+        "blockInputOverrides": true,
+        "domain": "switch",
+        "service": "turn_off",
         "x": 470,
-        "y": 1240,
+        "y": 300,
         "wires": [
-            [],
-            [],
             []
         ]
     },
     {
-        "id": "a3ad927750a09b3d",
-        "type": "inject",
-        "z": "f790aed9b99d17d7",
-        "name": "Přepnout",
-        "props": [],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "x": 200,
-        "y": 1180,
+        "id": "69d6481db4ea4e91",
+        "type": "delay",
+        "z": "3a1fe710368e588a",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "3",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 840,
+        "y": 360,
         "wires": [
             [
-                "1309146681a4c2a9"
+                "74bbdf1fc3d28fef"
             ]
         ]
     },
     {
-        "id": "1309146681a4c2a9",
-        "type": "exec",
-        "z": "f790aed9b99d17d7",
-        "command": "node \"C:\\Users\\user\\Documents\\scripts\\prepnout-setreni-energie-v-baterii.js\"",
-        "addpay": false,
-        "append": "",
-        "useSpawn": "false",
-        "timer": "",
-        "winHide": false,
-        "name": "Šetření energie v baterii",
-        "x": 470,
-        "y": 1180,
+        "id": "016df110dc9115b7",
+        "type": "ha-text",
+        "z": "3a1fe710368e588a",
+        "name": "Heslo",
+        "version": 1,
+        "debugenabled": false,
+        "inputs": 0,
+        "outputs": 1,
+        "entityConfig": "263dc3f2491d5de5",
+        "exposeAsEntityConfig": "",
+        "mode": "listen",
+        "value": "payload",
+        "valueType": "msg",
+        "outputProperties": [
+            {
+                "property": "payload",
+                "propertyType": "msg",
+                "value": "",
+                "valueType": "value"
+            },
+            {
+                "property": "previousValue",
+                "propertyType": "msg",
+                "value": "",
+                "valueType": "previousValue"
+            }
+        ],
+        "x": 110,
+        "y": 260,
         "wires": [
-            [],
-            [],
             []
         ]
     },
     {
-        "id": "8a63c47eb977b021",
-        "type": "inject",
-        "z": "f790aed9b99d17d7",
-        "name": "Přepnout",
-        "props": [],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "x": 200,
-        "y": 1300,
+        "id": "d9d19ee4e9c7a444",
+        "type": "ha-text",
+        "z": "3a1fe710368e588a",
+        "name": "e-mail",
+        "version": 1,
+        "debugenabled": false,
+        "inputs": 0,
+        "outputs": 1,
+        "entityConfig": "9cb38d9009cd09ec",
+        "exposeAsEntityConfig": "",
+        "mode": "listen",
+        "value": "payload",
+        "valueType": "msg",
+        "outputProperties": [
+            {
+                "property": "payload",
+                "propertyType": "msg",
+                "value": "",
+                "valueType": "value"
+            },
+            {
+                "property": "previousValue",
+                "propertyType": "msg",
+                "value": "",
+                "valueType": "previousValue"
+            }
+        ],
+        "x": 110,
+        "y": 220,
         "wires": [
-            [
-                "35ba8b1dec01880e"
-            ]
+            []
         ]
     },
     {
-        "id": "35ba8b1dec01880e",
-        "type": "exec",
-        "z": "f790aed9b99d17d7",
-        "command": "node \"C:\\Users\\user\\Documents\\scripts\\prepnout-zakaz-pretoku.js\"",
-        "addpay": false,
-        "append": "",
-        "useSpawn": "false",
-        "timer": "",
-        "winHide": false,
-        "name": "Zákaz přetoků",
-        "x": 440,
-        "y": 1300,
+        "id": "391459dfb5a2f267",
+        "type": "ha-text",
+        "z": "3a1fe710368e588a",
+        "name": "Inverter ID",
+        "version": 1,
+        "debugenabled": false,
+        "inputs": 0,
+        "outputs": 1,
+        "entityConfig": "98784c8e6637bb37",
+        "exposeAsEntityConfig": "",
+        "mode": "listen",
+        "value": "payload",
+        "valueType": "msg",
+        "outputProperties": [
+            {
+                "property": "payload",
+                "propertyType": "msg",
+                "value": "",
+                "valueType": "value"
+            },
+            {
+                "property": "previousValue",
+                "propertyType": "msg",
+                "value": "",
+                "valueType": "previousValue"
+            }
+        ],
+        "x": 120,
+        "y": 300,
         "wires": [
-            [],
-            [],
             []
         ]
+    },
+    {
+        "id": "df8e5a1.6b96ca8",
+        "type": "server",
+        "name": "Home Assistant",
+        "addon": true,
+        "rejectUnauthorizedCerts": true,
+        "ha_boolean": "",
+        "connectionDelay": false,
+        "cacheJson": false,
+        "heartbeat": false,
+        "heartbeatInterval": "",
+        "statusSeparator": "",
+        "enableGlobalContextStore": false
+    },
+    {
+        "id": "9612c2e051255520",
+        "type": "ha-entity-config",
+        "server": "df8e5a1.6b96ca8",
+        "deviceConfig": "d9e5b5e2f13c479a",
+        "name": "Flexibilita",
+        "version": 6,
+        "entityType": "switch",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "Flexibilita"
+            },
+            {
+                "property": "icon",
+                "value": "mdi:lightning-bolt-circle"
+            },
+            {
+                "property": "entity_picture",
+                "value": ""
+            },
+            {
+                "property": "entity_category",
+                "value": ""
+            },
+            {
+                "property": "device_class",
+                "value": "switch"
+            }
+        ],
+        "resend": false,
+        "debugEnabled": false
+    },
+    {
+        "id": "db60499e14d31d5f",
+        "type": "ha-entity-config",
+        "server": "df8e5a1.6b96ca8",
+        "deviceConfig": "d9e5b5e2f13c479a",
+        "name": "Optimalizace algoritmem",
+        "version": 6,
+        "entityType": "switch",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "Optimalizace algoritmem"
+            },
+            {
+                "property": "icon",
+                "value": "mdi:star-four-points"
+            },
+            {
+                "property": "entity_picture",
+                "value": ""
+            },
+            {
+                "property": "entity_category",
+                "value": ""
+            },
+            {
+                "property": "device_class",
+                "value": "switch"
+            }
+        ],
+        "resend": false,
+        "debugEnabled": false
+    },
+    {
+        "id": "bdf49a6ab330d253",
+        "type": "ha-entity-config",
+        "server": "df8e5a1.6b96ca8",
+        "deviceConfig": "d9e5b5e2f13c479a",
+        "name": "API status",
+        "version": 6,
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "API status"
+            },
+            {
+                "property": "icon",
+                "value": "mdi:check-network-outline"
+            },
+            {
+                "property": "entity_picture",
+                "value": ""
+            },
+            {
+                "property": "entity_category",
+                "value": ""
+            },
+            {
+                "property": "device_class",
+                "value": ""
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": ""
+            },
+            {
+                "property": "state_class",
+                "value": ""
+            }
+        ],
+        "resend": true,
+        "debugEnabled": false
+    },
+    {
+        "id": "f2c4c44a0c0f80bc",
+        "type": "ha-entity-config",
+        "server": "df8e5a1.6b96ca8",
+        "deviceConfig": "d9e5b5e2f13c479a",
+        "name": "Proteus flexibilita dostupná",
+        "version": 6,
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "Proteus flexibilita dostupná"
+            },
+            {
+                "property": "icon",
+                "value": "mdi:lightning-bolt-circle"
+            },
+            {
+                "property": "entity_picture",
+                "value": ""
+            },
+            {
+                "property": "entity_category",
+                "value": ""
+            },
+            {
+                "property": "device_class",
+                "value": ""
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": ""
+            },
+            {
+                "property": "state_class",
+                "value": ""
+            }
+        ],
+        "resend": true,
+        "debugEnabled": false
+    },
+    {
+        "id": "ecf4567ed84045d1",
+        "type": "ha-entity-config",
+        "server": "df8e5a1.6b96ca8",
+        "deviceConfig": "d9e5b5e2f13c479a",
+        "name": "Proteus režim",
+        "version": 6,
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "Proteus režim"
+            },
+            {
+                "property": "icon",
+                "value": "mdi:star-four-points"
+            },
+            {
+                "property": "entity_picture",
+                "value": ""
+            },
+            {
+                "property": "entity_category",
+                "value": ""
+            },
+            {
+                "property": "device_class",
+                "value": ""
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": ""
+            },
+            {
+                "property": "state_class",
+                "value": ""
+            }
+        ],
+        "resend": true,
+        "debugEnabled": false
+    },
+    {
+        "id": "6d54282639263efa",
+        "type": "ha-entity-config",
+        "server": "df8e5a1.6b96ca8",
+        "deviceConfig": "d9e5b5e2f13c479a",
+        "name": "Obchodování flexibility dnes",
+        "version": 6,
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "Obchodování flexibility dnes"
+            },
+            {
+                "property": "icon",
+                "value": "mdi:cash-multiple"
+            },
+            {
+                "property": "entity_picture",
+                "value": ""
+            },
+            {
+                "property": "entity_category",
+                "value": ""
+            },
+            {
+                "property": "device_class",
+                "value": ""
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": "Kč"
+            },
+            {
+                "property": "state_class",
+                "value": "measurement"
+            }
+        ],
+        "resend": true,
+        "debugEnabled": false
+    },
+    {
+        "id": "2573bcd377d2f902",
+        "type": "ha-entity-config",
+        "server": "df8e5a1.6b96ca8",
+        "deviceConfig": "d9e5b5e2f13c479a",
+        "name": "Obchodování flexibility za měsíc",
+        "version": 6,
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "Obchodování flexibility za měsíc"
+            },
+            {
+                "property": "icon",
+                "value": "mdi:cash-multiple"
+            },
+            {
+                "property": "entity_picture",
+                "value": ""
+            },
+            {
+                "property": "entity_category",
+                "value": ""
+            },
+            {
+                "property": "device_class",
+                "value": ""
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": "Kč"
+            },
+            {
+                "property": "state_class",
+                "value": "measurement"
+            }
+        ],
+        "resend": true,
+        "debugEnabled": false
+    },
+    {
+        "id": "c52c9a1fcd47ed45",
+        "type": "ha-entity-config",
+        "server": "df8e5a1.6b96ca8",
+        "deviceConfig": "d9e5b5e2f13c479a",
+        "name": "Obchodování flexibility celkem",
+        "version": 6,
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "Obchodování flexibility celkem"
+            },
+            {
+                "property": "icon",
+                "value": "mdi:cash-multiple"
+            },
+            {
+                "property": "entity_picture",
+                "value": ""
+            },
+            {
+                "property": "entity_category",
+                "value": ""
+            },
+            {
+                "property": "device_class",
+                "value": ""
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": "Kč"
+            },
+            {
+                "property": "state_class",
+                "value": "measurement"
+            }
+        ],
+        "resend": true,
+        "debugEnabled": false
+    },
+    {
+        "id": "93e0f36633b5e981",
+        "type": "ha-entity-config",
+        "server": "df8e5a1.6b96ca8",
+        "deviceConfig": "d9e5b5e2f13c479a",
+        "name": "Příkaz flexibility",
+        "version": 6,
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "Příkaz flexibility"
+            },
+            {
+                "property": "icon",
+                "value": "mdi:lightning-bolt-circle"
+            },
+            {
+                "property": "entity_picture",
+                "value": ""
+            },
+            {
+                "property": "entity_category",
+                "value": ""
+            },
+            {
+                "property": "device_class",
+                "value": ""
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": ""
+            },
+            {
+                "property": "state_class",
+                "value": ""
+            }
+        ],
+        "resend": true,
+        "debugEnabled": false
+    },
+    {
+        "id": "efaddbd02b7199da",
+        "type": "ha-entity-config",
+        "server": "df8e5a1.6b96ca8",
+        "deviceConfig": "d9e5b5e2f13c479a",
+        "name": "Konec flexibility",
+        "version": 6,
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "Konec flexibility"
+            },
+            {
+                "property": "icon",
+                "value": "mdi:lightning-bolt-circle"
+            },
+            {
+                "property": "entity_picture",
+                "value": ""
+            },
+            {
+                "property": "entity_category",
+                "value": ""
+            },
+            {
+                "property": "device_class",
+                "value": "timestamp"
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": ""
+            },
+            {
+                "property": "state_class",
+                "value": ""
+            }
+        ],
+        "resend": true,
+        "debugEnabled": false
+    },
+    {
+        "id": "c9bc639f0d546966",
+        "type": "ha-entity-config",
+        "server": "df8e5a1.6b96ca8",
+        "deviceConfig": "d9e5b5e2f13c479a",
+        "name": "Režim baterie",
+        "version": 6,
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "Režim baterie"
+            },
+            {
+                "property": "icon",
+                "value": "mdi:home-battery"
+            },
+            {
+                "property": "entity_picture",
+                "value": ""
+            },
+            {
+                "property": "entity_category",
+                "value": ""
+            },
+            {
+                "property": "device_class",
+                "value": ""
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": ""
+            },
+            {
+                "property": "state_class",
+                "value": ""
+            }
+        ],
+        "resend": true,
+        "debugEnabled": false
+    },
+    {
+        "id": "611cd565ac99d74b",
+        "type": "ha-entity-config",
+        "server": "df8e5a1.6b96ca8",
+        "deviceConfig": "d9e5b5e2f13c479a",
+        "name": "Záložní režim baterie",
+        "version": 6,
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "Záložní režim baterie"
+            },
+            {
+                "property": "icon",
+                "value": "mdi:home-battery"
+            },
+            {
+                "property": "entity_picture",
+                "value": ""
+            },
+            {
+                "property": "entity_category",
+                "value": ""
+            },
+            {
+                "property": "device_class",
+                "value": ""
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": ""
+            },
+            {
+                "property": "state_class",
+                "value": ""
+            }
+        ],
+        "resend": true,
+        "debugEnabled": false
+    },
+    {
+        "id": "cbed720dd93f9b96",
+        "type": "ha-entity-config",
+        "server": "df8e5a1.6b96ca8",
+        "deviceConfig": "d9e5b5e2f13c479a",
+        "name": "Režim výroby",
+        "version": 6,
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "Režim výroby"
+            },
+            {
+                "property": "icon",
+                "value": "mdi:star-four-points"
+            },
+            {
+                "property": "entity_picture",
+                "value": ""
+            },
+            {
+                "property": "entity_category",
+                "value": ""
+            },
+            {
+                "property": "device_class",
+                "value": ""
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": ""
+            },
+            {
+                "property": "state_class",
+                "value": ""
+            }
+        ],
+        "resend": true,
+        "debugEnabled": false
+    },
+    {
+        "id": "c5034a5225a20599",
+        "type": "ha-entity-config",
+        "server": "df8e5a1.6b96ca8",
+        "deviceConfig": "d9e5b5e2f13c479a",
+        "name": "Cílový SOC",
+        "version": 6,
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "Cílový SOC"
+            },
+            {
+                "property": "icon",
+                "value": "mdi:battery"
+            },
+            {
+                "property": "entity_picture",
+                "value": ""
+            },
+            {
+                "property": "entity_category",
+                "value": ""
+            },
+            {
+                "property": "device_class",
+                "value": "battery"
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": "%"
+            },
+            {
+                "property": "state_class",
+                "value": "measurement"
+            }
+        ],
+        "resend": true,
+        "debugEnabled": false
+    },
+    {
+        "id": "33d9f72328fea8e1",
+        "type": "ha-entity-config",
+        "server": "df8e5a1.6b96ca8",
+        "deviceConfig": "d9e5b5e2f13c479a",
+        "name": "Odhad výroby",
+        "version": 6,
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "Odhad výroby"
+            },
+            {
+                "property": "icon",
+                "value": ""
+            },
+            {
+                "property": "entity_picture",
+                "value": ""
+            },
+            {
+                "property": "entity_category",
+                "value": ""
+            },
+            {
+                "property": "device_class",
+                "value": "energy"
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": "Wh"
+            },
+            {
+                "property": "state_class",
+                "value": "measurement"
+            }
+        ],
+        "resend": true,
+        "debugEnabled": false
+    },
+    {
+        "id": "85c8e0b195c5e38e",
+        "type": "ha-entity-config",
+        "server": "df8e5a1.6b96ca8",
+        "deviceConfig": "d9e5b5e2f13c479a",
+        "name": "Odhad spotřeby",
+        "version": 6,
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "Odhad spotřeby"
+            },
+            {
+                "property": "icon",
+                "value": ""
+            },
+            {
+                "property": "entity_picture",
+                "value": ""
+            },
+            {
+                "property": "entity_category",
+                "value": ""
+            },
+            {
+                "property": "device_class",
+                "value": "energy"
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": "Wh"
+            },
+            {
+                "property": "state_class",
+                "value": "measurement"
+            }
+        ],
+        "resend": true,
+        "debugEnabled": false
+    },
+    {
+        "id": "775783a473698cb9",
+        "type": "ha-entity-config",
+        "server": "df8e5a1.6b96ca8",
+        "deviceConfig": "d9e5b5e2f13c479a",
+        "name": "Manuální příkaz",
+        "version": 6,
+        "entityType": "select",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "Manuální příkaz"
+            },
+            {
+                "property": "icon",
+                "value": ""
+            },
+            {
+                "property": "entity_picture",
+                "value": ""
+            },
+            {
+                "property": "entity_category",
+                "value": ""
+            },
+            {
+                "property": "options",
+                "value": [
+                    "Prodej do sítě místo nabíjení",
+                    "Prodej z baterie do sítě",
+                    "Šetření energie v baterii",
+                    "Nabíjení baterie ze sítě",
+                    "Zákaz přetoků",
+                    "Žádný"
+                ]
+            }
+        ],
+        "resend": false,
+        "debugEnabled": false
+    },
+    {
+        "id": "263dc3f2491d5de5",
+        "type": "ha-entity-config",
+        "server": "df8e5a1.6b96ca8",
+        "deviceConfig": "d9e5b5e2f13c479a",
+        "name": "Heslo",
+        "version": 6,
+        "entityType": "text",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "Heslo"
+            },
+            {
+                "property": "icon",
+                "value": ""
+            },
+            {
+                "property": "entity_picture",
+                "value": ""
+            },
+            {
+                "property": "entity_category",
+                "value": ""
+            },
+            {
+                "property": "mode",
+                "value": "password"
+            },
+            {
+                "property": "min_length",
+                "value": ""
+            },
+            {
+                "property": "max_length",
+                "value": ""
+            },
+            {
+                "property": "pattern",
+                "value": ""
+            }
+        ],
+        "resend": false,
+        "debugEnabled": false
+    },
+    {
+        "id": "9cb38d9009cd09ec",
+        "type": "ha-entity-config",
+        "server": "df8e5a1.6b96ca8",
+        "deviceConfig": "d9e5b5e2f13c479a",
+        "name": "e-mail",
+        "version": 6,
+        "entityType": "text",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "e-mail"
+            },
+            {
+                "property": "icon",
+                "value": ""
+            },
+            {
+                "property": "entity_picture",
+                "value": ""
+            },
+            {
+                "property": "entity_category",
+                "value": ""
+            },
+            {
+                "property": "mode",
+                "value": "text"
+            },
+            {
+                "property": "min_length",
+                "value": ""
+            },
+            {
+                "property": "max_length",
+                "value": ""
+            },
+            {
+                "property": "pattern",
+                "value": ""
+            }
+        ],
+        "resend": false,
+        "debugEnabled": false
+    },
+    {
+        "id": "98784c8e6637bb37",
+        "type": "ha-entity-config",
+        "server": "df8e5a1.6b96ca8",
+        "deviceConfig": "d9e5b5e2f13c479a",
+        "name": "InverterID",
+        "version": 6,
+        "entityType": "text",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "InverterID"
+            },
+            {
+                "property": "icon",
+                "value": ""
+            },
+            {
+                "property": "entity_picture",
+                "value": ""
+            },
+            {
+                "property": "entity_category",
+                "value": ""
+            },
+            {
+                "property": "mode",
+                "value": "text"
+            },
+            {
+                "property": "min_length",
+                "value": ""
+            },
+            {
+                "property": "max_length",
+                "value": ""
+            },
+            {
+                "property": "pattern",
+                "value": ""
+            }
+        ],
+        "resend": false,
+        "debugEnabled": false
+    },
+    {
+        "id": "d9e5b5e2f13c479a",
+        "type": "ha-device-config",
+        "name": "Proteus",
+        "hwVersion": "",
+        "manufacturer": "DeltaGreen @RadekBus",
+        "model": "",
+        "swVersion": "1.0.0"
     }
 ]
