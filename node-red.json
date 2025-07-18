@@ -213,7 +213,7 @@
         "type": "debug",
         "z": "3a1fe710368e588a",
         "name": "Proteus",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -221,7 +221,7 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 980,
+        "x": 920,
         "y": 140,
         "wires": []
     },
@@ -261,8 +261,7 @@
         "y": 200,
         "wires": [
             [
-                "c980c48b6913d194",
-                "8cb2621b6ca031ce"
+                "c980c48b6913d194"
             ]
         ]
     },
@@ -286,8 +285,7 @@
         "y": 540,
         "wires": [
             [
-                "555d31eab7c73421",
-                "a3ab9760282dc1be"
+                "555d31eab7c73421"
             ]
         ]
     },
@@ -665,8 +663,7 @@
         "y": 680,
         "wires": [
             [
-                "92db862a40392857",
-                "a3ab9760282dc1be"
+                "92db862a40392857"
             ]
         ]
     },
@@ -1388,22 +1385,6 @@
         "wires": []
     },
     {
-        "id": "a3ab9760282dc1be",
-        "type": "debug",
-        "z": "3a1fe710368e588a",
-        "name": "debug 17",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1010,
-        "y": 740,
-        "wires": []
-    },
-    {
         "id": "5cda3eb85c2e8ac3",
         "type": "ha-sensor",
         "z": "3a1fe710368e588a",
@@ -1627,27 +1608,9 @@
         "y": 360,
         "wires": [
             [
-                "37294b5b85705f53",
                 "fafa719eaf372c0d"
             ]
         ]
-    },
-    {
-        "id": "37294b5b85705f53",
-        "type": "debug",
-        "z": "3a1fe710368e588a",
-        "name": "debug 20",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 760,
-        "y": 260,
-        "wires": []
     },
     {
         "id": "fafa719eaf372c0d",
@@ -1780,7 +1743,6 @@
         "y": 360,
         "wires": [
             [
-                "37294b5b85705f53",
                 "69d6481db4ea4e91"
             ]
         ]
