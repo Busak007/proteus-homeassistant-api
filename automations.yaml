@@ -1,0 +1,42 @@
+- alias: Flexibilita notifikace
+  description: >
+    Notifikace o změně stavu flexibility
+  trigger:
+    - platform: state
+      entity_id: sensor.prikaz_flexibility
+      from: unknown
+      to: null
+      id: zapnuta
+    - platform: state
+      entity_id: sensor.prikaz_flexibility
+      from: null
+      to: unknown
+      id: vypnuta
+  condition:
+    - condition: not
+      conditions:
+        - condition: state
+          entity_id: sensor.prikaz_flexibility
+          state: unavailable
+  action:
+    - choose:
+        - conditions:
+            - condition: trigger
+              id: zapnuta
+          sequence:
+            - service: notify.mobile_app_iphone
+              data:
+                title: Flexibilita
+                message: |
+                  Byla zapnuta 🟢
+                  Příkaz: {{ states('sensor.prikaz_flexibility') }}
+                  Do: {{ states('sensor.konec_flexibility') }}
+        - conditions:
+            - condition: trigger
+              id: vypnuta
+          sequence:
+            - service: notify.mobile_app_iphone
+              data:
+                title: Flexibilita
+                message: Byla vypnuta 🔴
+  mode: parallel
