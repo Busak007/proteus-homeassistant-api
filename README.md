@@ -8,5 +8,8 @@ je třeba mít nainstalovaný addon HACS - Node-RED Companion Integration - http
 v HomeAssistant otevřete nastavení -> integrace -> NodeRed -> Proteus a vyplňte email, heslo a inverterID
 Do 30s by se mělo API připojit a stáhnout data
 
+Přidána autoamtizace s notifikací o změně stavu
+Přidány entity s množstvím a cenou flexibility CZK/kWh import/export - mělo by jít použít do karty energie
+
 To je vše :-)
 
